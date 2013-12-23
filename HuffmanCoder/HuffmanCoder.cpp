@@ -77,11 +77,19 @@ std::string HuffmanCoder::decode(const std::string &data)
                 nextToRight = false;
             }            
         }
-        else if (data[i] == '1')
+        else if (data[i] == '1' && data[i-1] != '1') //is terminal
         {
             currentNode->value = leafStr[leafId++];
 
             charMap[currentNode->value] = path;
+            path.pop_back();
+
+            currentNode = currentNode->parent;
+
+            nextToRight = true;
+        }
+        else if (data[i] == '1') //hop up
+        {
             path.pop_back();
 
             currentNode = currentNode->parent;
@@ -171,9 +179,9 @@ void HuffmanCoder::buildCharMapAndVisitHistory(CharMap &charMap, std::vector<cha
     if (node->left == nullptr && node->right == nullptr) //we are in leaf
     {
         charMap[node->value] = path;
-        path.pop_back();
+        //path.pop_back();
 
-        visitHistory.push_back('1');
+        //visitHistory.push_back('1');
         leafStr += node->value;
 
         return;
@@ -185,6 +193,8 @@ void HuffmanCoder::buildCharMapAndVisitHistory(CharMap &charMap, std::vector<cha
         visitHistory.push_back('0');
 
         buildCharMapAndVisitHistory(charMap, visitHistory, leafStr, node->left, path);
+        visitHistory.push_back('1');
+        path.pop_back();
     }
     if (node->right)
     {
@@ -192,5 +202,7 @@ void HuffmanCoder::buildCharMapAndVisitHistory(CharMap &charMap, std::vector<cha
         visitHistory.push_back('0');
 
         buildCharMapAndVisitHistory(charMap, visitHistory, leafStr, node->right, path);
+        visitHistory.push_back('1');
+        path.pop_back();
     }
 }

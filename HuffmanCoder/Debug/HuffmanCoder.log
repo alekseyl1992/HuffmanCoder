@@ -1,12 +1,12 @@
-﻿Построение начато 23.12.2013 22:24:30.
+﻿Построение начато 23.12.2013 23:41:25.
      1>Проект "D:\Dropbox\Projects\AADS\HuffmanCoder\HuffmanCoder\HuffmanCoder.vcxproj" в узле 2 (целевые объекты Build).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt HuffmanCoder.cpp
          HuffmanCoder.cpp
      1>d:\dropbox\projects\aads\huffmancoder\huffmancoder\huffmancoder.cpp(42): warning C4018: <: несоответствие типов со знаком и без знака
      1>d:\dropbox\projects\aads\huffmancoder\huffmancoder\huffmancoder.cpp(59): warning C4018: <: несоответствие типов со знаком и без знака
-     1>d:\dropbox\projects\aads\huffmancoder\huffmancoder\huffmancoder.cpp(99): warning C4018: <: несоответствие типов со знаком и без знака
-     1>d:\dropbox\projects\aads\huffmancoder\huffmancoder\huffmancoder.cpp(134): warning C4018: <: несоответствие типов со знаком и без знака
+     1>d:\dropbox\projects\aads\huffmancoder\huffmancoder\huffmancoder.cpp(107): warning C4018: <: несоответствие типов со знаком и без знака
+     1>d:\dropbox\projects\aads\huffmancoder\huffmancoder\huffmancoder.cpp(142): warning C4018: <: несоответствие типов со знаком и без знака
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Dropbox\Projects\AADS\HuffmanCoder\Debug\HuffmanCoder.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Dropbox\Projects\AADS\HuffmanCoder\Debug\HuffmanCoder.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Dropbox\Projects\AADS\HuffmanCoder\Debug\HuffmanCoder.lib" /MACHINE:X86 Debug\HuffmanCoder.obj
          Debug\main.obj
@@ -15,4 +15,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:01.12
+Затраченное время: 00:00:00.75
