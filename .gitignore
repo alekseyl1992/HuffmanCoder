@@ -11,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+# VS
+*.sdf
+*.suo
+*.pdb
+*.ilk
+*.obj
+*.tlog
+./HuffmanCoder/Debug
