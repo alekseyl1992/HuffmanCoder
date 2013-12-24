@@ -2,12 +2,12 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <fstream>
 
 typedef unsigned char byte;
 typedef unsigned int uint;
 typedef std::array<uint, 256> FreqArray;
 typedef std::array<std::vector<char>, 256> CharMap;
-
 
 struct Node
 {
@@ -22,15 +22,29 @@ struct Node
     { }
 };
 
+struct ShortByte
+{
+    byte value;
+    byte size;
+
+    ShortByte(byte v = 0, byte s = 0)
+        : value(v), size(s)
+    { }
+};
+
+typedef std::array<ShortByte, 256> PackedCharMap;
+
 class HuffmanCoder
 {
 public:
-    std::string encode(const std::string &str);
-    std::string decode(const std::string &data);
-    FreqArray buildFreqArray(const std::string &str);
+    void encode(std::ifstream &in, std::ofstream &out);
+    void decode(std::ifstream &in, std::ofstream &out);
+    FreqArray buildFreqArray(std::ifstream &in);
     Node *HuffmanCoder::buildTree(const FreqArray &freqArray);
-    void buildCharMapAndVisitHistory(CharMap &charMap, std::vector<char> &visitHistory, std::string &leafStr, Node *node, std::vector<char> &path);
+    void buildCharMapAndVisitHistory(CharMap &charMap, std::vector<char> &visitHistory, std::vector<char> &leafStr, Node *node, std::vector<char> &path);
 
+    std::vector<byte> packBitVector(const std::vector<char> &vec);
+    PackedCharMap packCharMap(const CharMap &charMap);
 private:
 };
 
