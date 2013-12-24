@@ -22,18 +22,6 @@ struct Node
     { }
 };
 
-struct ShortByte
-{
-    byte value;
-    byte size;
-
-    ShortByte(byte v = 0, byte s = 0)
-        : value(v), size(s)
-    { }
-};
-
-typedef std::array<ShortByte, 256> PackedCharMap;
-
 class HuffmanCoder
 {
 public:
@@ -44,7 +32,7 @@ public:
     void buildCharMapAndVisitHistory(CharMap &charMap, std::vector<char> &visitHistory, std::vector<char> &leafStr, Node *node, std::vector<char> &path);
 
     std::vector<byte> packBitVector(const std::vector<char> &vec);
-    PackedCharMap packCharMap(const CharMap &charMap);
+    byte packVectorToByte(const std::vector<char> &vec);
 private:
 };
 

@@ -7,16 +7,16 @@ int main(int argc, char **argv)
 {
     HuffmanCoder coder;
 
-    std::ifstream in("file.txt", std::ios::binary);
-    std::ofstream out("file.txt.encoded", std::ios::binary);
+    std::ifstream in("CUU.doc", std::ios::binary);
+    std::ofstream out("CUU.doc.encoded", std::ios::binary);
 
     coder.encode(in, out);
 
     in.close();
     out.close();
 
-    std::ifstream coded("file.txt.encoded", std::ios::binary);
-    std::ofstream decoded("file.txt.decoded", std::ios::binary);
+    std::ifstream coded("CUU.doc.encoded", std::ios::binary);
+    std::ofstream decoded("CUU.decoded.doc", std::ios::binary);
 
     coder.decode(coded, decoded);
 

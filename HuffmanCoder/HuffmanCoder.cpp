@@ -16,86 +16,65 @@ void HuffmanCoder::encode(std::ifstream &in, std::ofstream &out)
 
     
     //write leafs
-    byte leafsLen = leafs.size(); //1 byte is enough for 256 leafs
-    out << leafsLen;
+    byte leafsLen = leafs.size() - 1; //1 byte is enough for 256 leafs
+    out.put(leafsLen);
     for (auto leaf: leafs)
-        out << leaf;
+        out.put(leaf);
 
     //write visit history
     auto bitwiseVisitHistory = packBitVector(visitHistory);
+
     uint16_t historyLen = visitHistory.size(); //2 bytes (up to ~1024 hops)
-    out << historyLen;
+    out.write((char *)&historyLen, sizeof(historyLen));
+
     for (auto octet: bitwiseVisitHistory)
-        out << octet;
+        out.put(octet);
 
     //write encoded data
     uint64_t dataLen = 0;
     for (int i = 0; i < charMap.size(); ++i)
         dataLen += charMap[i].size() * freqArray[i];
 
-    out << dataLen;
+    out.write((char *)&dataLen, sizeof(dataLen));
 
-    //pack charMap
-    auto packedCharMap = packCharMap(charMap);
-
-    
-    byte pos = 0; //write position [0; 7]
-    byte outByte = 0;
+    std::vector<char> buffer;
 
     for (;;)
     {
         char inByte = 0;
-        in >> inByte;
+        in.get(inByte);
 
-        if (in.eof())
+        if (!in.eof())
         {
-            if (pos != 0)
-                out << outByte; //write last byte
+            auto codedChar = charMap[(byte)inByte];
+            buffer.insert(buffer.end(), codedChar.begin(), codedChar.end()); //maybe std::copy would be faster
+        }
 
+        if (buffer.size() >= 8 || (in.eof() && buffer.size() != 0))
+        {
+            byte packed = packVectorToByte(buffer);
+            out.put(packed);
+
+            uint offset = std::min(8, (int)buffer.size());
+            buffer.erase(buffer.begin(), buffer.begin() + offset);
+        }
+        else if (in.eof() && buffer.size() == 0)
             break;
-        }
-
-        ShortByte sb = packedCharMap[inByte]; //encode 1 byte
-
-        if (pos + sb.size == 8) //exactly 1 byte
-        {
-            //write byte
-            outByte |= (sb.value >> pos);
-            pos = 0;
-
-            out << outByte;
-            outByte = 0;
-        }
-        else if (pos + sb.size < 8) //less then 1 byte
-        {
-            outByte |= (sb.value >> pos);
-            pos += sb.size;
-        }
-        else // more then 1 byte
-        {
-            //write byte
-            outByte |= (sb.value >> pos);
-            out << outByte;
-            outByte = 0;
-
-            pos = pos + sb.size - 8; //rest bits
-            outByte = sb.value << (sb.size - pos);
-        }
     }
 }
 
 void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
 {
     //read leafs
-    byte leafsLen = 0;
-    in >> leafsLen;
+    char leafsLen = 0;
+    in.get(leafsLen);
 
     std::vector<char> leafs;
 
-    for (uint i = 0; i < leafsLen; ++i)
+    for (uint i = 0; i <= (byte)leafsLen; ++i)
     {
-        byte curByte = 0;
-        in >> curByte;
+        char curByte = 0;
+        in.get(curByte);
         //TODO: test for eof() and throw exception
 
         leafs.push_back(curByte);
@@ -103,7 +82,7 @@ void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
 
     //read visitHistory
     uint16_t historyLen = 0;
-    in >> historyLen;
+    in.read((char *)&historyLen, sizeof(historyLen));
 
     uint historyLenBytes = historyLen / 8;
     uint historyRest = historyLen % 8;
@@ -112,8 +91,8 @@ void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
 
     for (uint i = 0; i < historyLenBytes; ++i)
     {
-        byte curByte = 0;
-        in >> curByte;
+        char curByte = 0;
+        in.get(curByte);
 
         byte mask = 1 << 7; //0b10000000
 
@@ -130,8 +109,8 @@ void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
 
     if (historyRest != 0)
     {
-        byte curByte = 0;
-        in >> curByte;
+        char curByte = 0;
+        in.get(curByte);
 
         byte mask = 1 << 7; //0b10000000
         for (uint j = 0; j < historyRest; ++j)
@@ -179,7 +158,7 @@ void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
         {
             currentNode->value = leafs[leafId++];
 
-            charMap[currentNode->value] = path;
+            charMap[(byte)currentNode->value] = path;
             path.pop_back();
 
             currentNode = currentNode->parent;
@@ -198,12 +177,10 @@ void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
 
     //read data
     uint64_t dataLen = 0;
-    in >> dataLen;
+    in.read((char *)&dataLen, sizeof(dataLen));
 
-    byte curBit = 0;
-    byte prevBit = 0;
-
-    byte curByte = 0;
+    bool curBit = 0;
+    char curByte = 0;
 
     currentNode = tree;
 
@@ -212,10 +189,10 @@ void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
         if (absPos % 8 == 0)
         {
             //time to read one more byte
-            in >> curByte;
+            in.get(curByte);
         }
 
-        curBit = bool((curByte << (absPos % 8)) & 0x80);
+        curBit = bool(((byte)curByte << (absPos % 8)) & 0x80);
 
         if (curBit == 0)
             currentNode = currentNode->left;
@@ -224,7 +201,7 @@ void HuffmanCoder::decode(std::ifstream &in, std::ofstream &out)
 
         if (currentNode->left == nullptr && currentNode->right == nullptr) //we are in leaf
         {
-            out << currentNode->value;
+            out.put(currentNode->value);
             currentNode = tree;
         }
     }
@@ -237,13 +214,13 @@ FreqArray HuffmanCoder::buildFreqArray(std::ifstream &in)
 
     for (;;)
     {
-        byte ch;
-        in >> ch;
+        char ch;
+        in.get(ch);
 
         if (in.eof())
             break;
 
-        ++freqArray[ch];
+        ++freqArray[(byte)ch];
     }
 
     in.clear();
@@ -257,7 +234,7 @@ Node *HuffmanCoder::buildTree(const FreqArray &freqArray)
     std::vector<Node *> heap;
 
     //push leafs
-    for (char i = 0; i < freqArray.size(); ++i)
+    for (int i = 0; i < freqArray.size(); ++i)
         if (freqArray[i] != 0)
             heap.push_back(new Node(i, freqArray[i]));
 
@@ -296,7 +273,7 @@ void HuffmanCoder::buildCharMapAndVisitHistory(CharMap &charMap, std::vector<cha
 {
     if (node->left == nullptr && node->right == nullptr) //we are in leaf
     {
-        charMap[node->value] = path;
+        charMap[(byte)node->value] = path;
         //path.pop_back();
 
         //visitHistory.push_back('1');
@@ -356,24 +333,15 @@ std::vector<byte> HuffmanCoder::packBitVector(const std::vector<char> &vec)
     return result;
 }
 
-PackedCharMap HuffmanCoder::packCharMap(const CharMap &charMap)
+byte HuffmanCoder::packVectorToByte(const std::vector<char> &vec)
 {
-    PackedCharMap packedCharMap;
+    byte result = 0;
     
-    for (int i = 0; i < charMap.size(); ++i)
-    {
-        if (charMap[i].size() != 0)
-        {
-            auto &vec = charMap[i];
-            ShortByte shortByte(0, vec.size());
+    uint size = std::min(8, (int)vec.size());
 
-            for (int j = 0; j < vec.size(); ++j) //for each bit in octet
-                if (vec[j] == '1')
-                    shortByte.value |= (1 << (7 - j));
+    for (int j = 0; j < size; ++j) //for each bit in octet
+        if (vec[j] == '1')
+            result |= (1 << (7 - j));
 
-            packedCharMap[i] = shortByte;
-        }
-    }
-
-    return packedCharMap;
+    return result;
 }

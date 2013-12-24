@@ -1,4 +1,4 @@
-﻿Построение начато 24.12.2013 4:44:37.
+﻿Построение начато 24.12.2013 19:10:05.
      1>Проект "D:\Dropbox\Projects\AADS\HuffmanCoder\HuffmanCoder\HuffmanCoder.vcxproj" в узле 2 (целевые объекты Build).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
@@ -11,4 +11,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:00.67
+Затраченное время: 00:00:00.70
