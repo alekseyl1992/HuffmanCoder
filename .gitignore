@@ -19,4 +19,5 @@
 *.ilk
 *.obj
 *.tlog
-./HuffmanCoder/Debug
+/HuffmanCoder/Debug
+/Debug
