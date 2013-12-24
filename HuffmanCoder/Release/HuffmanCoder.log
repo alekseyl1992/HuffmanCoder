@@ -1,0 +1,21 @@
+﻿Построение начато 24.12.2013 20:43:00.
+     1>Проект "D:\Dropbox\Projects\AADS\HuffmanCoder\HuffmanCoder\HuffmanCoder.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt HuffmanCoder.cpp main.cpp
+         HuffmanCoder.cpp
+     1>HuffmanCoder.cpp(36): warning C4018: <: несоответствие типов со знаком и без знака
+     1>HuffmanCoder.cpp(199): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>HuffmanCoder.cpp(241): warning C4018: <: несоответствие типов со знаком и без знака
+     1>HuffmanCoder.cpp(346): warning C4018: <: несоответствие типов со знаком и без знака
+         main.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Dropbox\Projects\AADS\HuffmanCoder\Release\HuffmanCoder.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Dropbox\Projects\AADS\HuffmanCoder\Release\HuffmanCoder.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Dropbox\Projects\AADS\HuffmanCoder\Release\HuffmanCoder.lib" /MACHINE:X86 /SAFESEH Release\HuffmanCoder.obj
+         Release\main.obj
+         Создание кода
+         Создание кода завершено
+         HuffmanCoder.vcxproj -> D:\Dropbox\Projects\AADS\HuffmanCoder\Release\HuffmanCoder.exe
+     1>Построение проекта "D:\Dropbox\Projects\AADS\HuffmanCoder\HuffmanCoder\HuffmanCoder.vcxproj" завершено (целевые объекты Build).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:01.61

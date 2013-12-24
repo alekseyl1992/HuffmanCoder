@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstdint>
+#include <deque>
 #include "HuffmanCoder.h"
 
 
@@ -37,7 +38,7 @@ void HuffmanCoder::encode(std::ifstream &in, std::ofstream &out)
 
     out.write((char *)&dataLen, sizeof(dataLen));
 
-    std::vector<char> buffer;
+    std::queue<char> buffer;
 
     for (;;)
     {
@@ -47,7 +48,10 @@ void HuffmanCoder::encode(std::ifstream &in, std::ofstream &out)
         if (!in.eof())
         {
             auto codedChar = charMap[(byte)inByte];
-            buffer.insert(buffer.end(), codedChar.begin(), codedChar.end()); //maybe std::copy would be faster
+
+            //std::copy(codedChar.begin(), codedChar.end(), buffer.end() - codedChar.size()); //maybe std::copy would be faster
+            for (auto bit: codedChar)
+                buffer.push(bit);
         }
 
         if (buffer.size() >= 8 || (in.eof() && buffer.size() != 0))
@@ -55,8 +59,8 @@ void HuffmanCoder::encode(std::ifstream &in, std::ofstream &out)
             byte packed = packVectorToByte(buffer);
             out.put(packed);
 
-            uint offset = std::min(8, (int)buffer.size());
-            buffer.erase(buffer.begin(), buffer.begin() + offset);
+            //uint offset = std::min(8, (int)buffer.size());
+            //buffer.erase(buffer.begin(), buffer.begin() + offset);
         }
         else if (in.eof() && buffer.size() == 0)
             break;
@@ -333,15 +337,20 @@ std::vector<byte> HuffmanCoder::packBitVector(const std::vector<char> &vec)
     return result;
 }
 
-byte HuffmanCoder::packVectorToByte(const std::vector<char> &vec)
+byte HuffmanCoder::packVectorToByte(std::queue<char> &vec)
 {
     byte result = 0;
     
     uint size = std::min(8, (int)vec.size());
 
     for (int j = 0; j < size; ++j) //for each bit in octet
-        if (vec[j] == '1')
+    {
+        auto value = vec.front();
+        vec.pop();
+
+        if (value == '1')
             result |= (1 << (7 - j));
+    }
 
     return result;
 }

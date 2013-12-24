@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 #include <fstream>
+#include <queue>
 
 typedef unsigned char byte;
 typedef unsigned int uint;
@@ -32,7 +33,7 @@ public:
     void buildCharMapAndVisitHistory(CharMap &charMap, std::vector<char> &visitHistory, std::vector<char> &leafStr, Node *node, std::vector<char> &path);
 
     std::vector<byte> packBitVector(const std::vector<char> &vec);
-    byte packVectorToByte(const std::vector<char> &vec);
+    byte packVectorToByte(std::queue<char> &vec);
 private:
 };
 
